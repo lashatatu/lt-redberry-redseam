@@ -1,17 +1,13 @@
-import React, { useState } from "react";
-import { Eye, EyeOff, User } from "lucide-react";
 import HeaderComponent from "./Components/HeaderComponent.jsx";
-import LogInComponent from "./Components/LogInComponent.jsx";
+import HeroComponent from "./Components/HeroComponent.jsx";
 
 function App() {
 
 
   return (
-    <div className="min-h-screen">
-      {/* Left side - Hero Image */}
+    <div>
       <HeaderComponent />
-      {/* Login Form */}
-      <LogInComponent />
+      <HeroComponent />
 
     </div>
   );
