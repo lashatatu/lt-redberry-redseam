@@ -7,6 +7,8 @@ const LogInComponent = ({onRegisterClick}) => {
     email: "",
     password: ""
   });
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -15,9 +17,29 @@ const LogInComponent = ({onRegisterClick}) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login attempt:", formData);
+    setError(null);
+    setSuccess(false);
+    try {
+      const response = await fetch('https://api.redseam.redberryinternship.ge/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        setSuccess(true);
+        setError(null);
+      } else {
+        const res = await response.json();
+        setError(res.message || 'Login failed.');
+      }
+    } catch (err) {
+      setError('Network error.');
+    }
   };
   return (
     <div className='w-3/5 flex'>
@@ -59,6 +81,8 @@ const LogInComponent = ({onRegisterClick}) => {
                 </button>
               </div>
             </div>
+            {error && <div className='text-red-500 text-center'>{error}</div>}
+            {success && <div className='text-green-600 text-center'>Login successful!</div>}
             <button
               type='submit'
               className='w-full bg-orange-600 text-white py-2 rounded-lg font-medium transition-colors mt-6'

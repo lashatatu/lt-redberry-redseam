@@ -1,32 +1,81 @@
 import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
 
-const RegisterComponent = ({onLoginClick}) => {
+const RegisterComponent = ({ onLoginClick }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
+    password_confirmation: '',
+    avatar: null,
   });
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value, type, files } = e.target;
+    if (type === 'file') {
+      setFormData({
+        ...formData,
+        [name]: files[0],
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt:', formData);
+    setError(null);
+    setSuccess(false);
+    if (formData.password !== formData.password_confirmation) {
+      setError('Passwords do not match.');
+      return;
+    }
+    try {
+      const data = new FormData();
+      data.append('username', formData.username);
+      data.append('email', formData.email);
+      data.append('password', formData.password);
+      data.append('password_confirmation', formData.password_confirmation);
+      if (formData.avatar) {
+        data.append('avatar', formData.avatar);
+      }
+      const response = await fetch('https://api.redseam.redberryinternship.ge/api/register', {
+        method: 'POST',
+        body: data,
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+      if (response.ok) {
+        setSuccess(true);
+        setFormData({
+          username: '',
+          email: '',
+          password: '',
+          password_confirmation: '',
+          avatar: null,
+        });
+      } else {
+        const res = await response.json();
+        setError(res.message || 'Registration failed.');
+      }
+    } catch (err) {
+      setError('Network error.');
+    }
   };
+
   return (
     <div className='w-3/5 flex'>
       <div className='flex-1 flex items-center justify-center'>
         <div className='w-full h-1/2 max-w-3/5 mb-12'>
           <h1 className='text-5xl font-bold text-gray-900 mb-12'>Register</h1>
-
-          <form onSubmit={handleSubmit} className='space-y-6'>
+          <form onSubmit={handleSubmit} className='space-y-6' encType='multipart/form-data'>
             <div>
               <input
                 type='text'
@@ -65,7 +114,7 @@ const RegisterComponent = ({onLoginClick}) => {
                 />
                 <button
                   type='button'
-                  onClick={() => setShowPassword( !showPassword)}
+                  onClick={() => setShowPassword(!showPassword)}
                   className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600'
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -76,9 +125,9 @@ const RegisterComponent = ({onLoginClick}) => {
               <div className='relative'>
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  id='password'
-                  name='password'
-                  value={formData.password}
+                  id='password_confirmation'
+                  name='password_confirmation'
+                  value={formData.password_confirmation}
                   onChange={handleInputChange}
                   className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent pr-12'
                   required
@@ -86,13 +135,25 @@ const RegisterComponent = ({onLoginClick}) => {
                 />
                 <button
                   type='button'
-                  onClick={() => setShowPassword( !showPassword)}
+                  onClick={() => setShowPassword(!showPassword)}
                   className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600'
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
             </div>
+            <div>
+              <input
+                type='file'
+                id='avatar'
+                name='avatar'
+                accept='image/*'
+                onChange={handleInputChange}
+                className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent'
+              />
+            </div>
+            {error && <div className='text-red-500 text-center'>{error}</div>}
+            {success && <div className='text-green-600 text-center'>Registration successful!</div>}
             <button
               type='submit'
               className='w-full bg-orange-600 text-white py-2 rounded-lg font-medium transition-colors mt-6'
