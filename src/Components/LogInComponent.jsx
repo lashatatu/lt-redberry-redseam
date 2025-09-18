@@ -22,7 +22,7 @@ const LogInComponent = ({onRegisterClick}) => {
     setError(null);
     setSuccess(false);
     try {
-      const response = await fetch('https://api.redseam.redberryinternship.ge/api/login', {
+      const response = await fetch(import.meta.env.VITE_LOG_IN_ENDPOINT, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

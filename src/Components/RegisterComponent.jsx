@@ -45,7 +45,7 @@ const RegisterComponent = ({ onLoginClick }) => {
       if (formData.avatar) {
         data.append('avatar', formData.avatar);
       }
-      const response = await fetch('https://api.redseam.redberryinternship.ge/api/register', {
+      const response = await fetch(import.meta.env.VITE_REGISTER_ENDPOINT, {
         method: 'POST',
         body: data,
         headers: {
