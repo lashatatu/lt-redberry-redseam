@@ -1,7 +1,7 @@
 import { Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
 
-const LogInComponent = () => {
+const LogInComponent = ({onRegisterClick}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -22,7 +22,7 @@ const LogInComponent = () => {
   return (
     <div className='w-3/5 flex'>
       <div className='flex-1 flex items-center justify-center'>
-        <div className='w-full h-2/5 max-w-3/5 mb-12'>
+        <div className='w-full h-1/2 max-w-3/5 mb-12'>
           <h1 className='text-5xl font-bold text-gray-900 mb-12'>Log in</h1>
 
           <form onSubmit={handleSubmit} className='space-y-6'>
@@ -68,12 +68,12 @@ const LogInComponent = () => {
           </form>
           <p className='text-center mt-6 text-gray-600'>
             Not a member?{" "}
-            <a
-              href='#'
-              className='text-orange-500 hover:text-orange-600 font-medium'
+            <button
+              className='text-orange-500 hover:text-orange-600 font-medium cursor-pointer'
+              onClick={()=>onRegisterClick()}
             >
               Register
-            </a>
+            </button>
           </p>
         </div>
       </div>
