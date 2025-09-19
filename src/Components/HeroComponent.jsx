@@ -18,6 +18,4 @@ const HeroComponent = ({showRegister,setShowRegister}) => {
   );
 };
 
-/*You will also need to update LogInComponent and RegisterComponent to accept and use the onRegisterClick and onLoginClick props for the buttons/links.*/
-
 export default HeroComponent;

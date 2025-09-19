@@ -11,7 +11,6 @@ function App() {
     <div>
       <HeaderComponent />
       <HeroComponent showRegister={showRegister} setShowRegister={setShowRegister}/>
-
     </div>
   );
 }
