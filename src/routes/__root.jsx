@@ -1,7 +1,8 @@
-import { createRootRoute, HeadContent, Outlet } from "@tanstack/react-router";
+import { createRootRouteWithContext, HeadContent, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import HeaderComponent from "../Components/HeaderComponent.jsx";
 
-export const Route = createRootRoute ({
+export const Route = createRootRouteWithContext() ({
     head: () => ({
       meta: [
         {
@@ -15,6 +16,7 @@ export const Route = createRootRoute ({
     }),
     component: () => (
       <>
+        <HeaderComponent/>
         <HeadContent />
         <Outlet />
         <TanStackRouterDevtools />

@@ -1,4 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import ProductDetails from "../../../Components/ProductDetails.jsx";
 
 const fetchProduct = async (productId) => {
   const res = await fetch(`${import.meta.env.VITE_PRODUCT_ID_ENDPOINT}/${productId}`, {
@@ -12,14 +14,25 @@ const fetchProduct = async (productId) => {
   return res.json();
 };
 
+const productQueryOptions = (productId) => queryOptions({
+  queryKey: ["product", productId],
+  queryFn: () => fetchProduct(productId)
+});
+
 export const Route = createFileRoute("/product/$productId/")({
   component: ProductId,
-  loader: async ({ params }) => {
-    return fetchProduct(params.productId);
+  loader: async ({
+    params,
+    context: { queryClient }
+  }) => {
+    return queryClient.ensureQueryData(productQueryOptions(params.productId));
   }
 });
 
 function ProductId () {
-  const product = Route.useLoaderData();
-  return <div>Hello {product.name}</div>;
+  const { productId } = Route.useParams();
+  const { data: product } = useSuspenseQuery(productQueryOptions(productId));
+  return <div>
+    <ProductDetails product={product} />
+  </div>;
 }
