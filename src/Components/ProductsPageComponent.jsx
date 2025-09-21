@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "@tanstack/react-router";
 
 const ProductsPageComponent = ({ products }) => {
   return (
@@ -27,13 +28,15 @@ const ProductsPageComponent = ({ products }) => {
       </div>
       <div className='grid grid-cols-4 gap-4'>
         {products.data.map((item) => (
-          <div key={item.id} className='pb-12'>
-            <img src={item.cover_image} alt='' className=' w-100 pb-4' />
-            <div className='font-semibold'>
-              <p className='pb-4'>{item.name}</p>
-              <p>$ {item.price}</p>
+          <Link to={`../product/${item.id}`}>
+            <div key={item.id} className='pb-12'>
+              <img src={item.cover_image} alt='' className=' w-100 pb-4' />
+              <div className='font-semibold'>
+                <p className='pb-4'>{item.name}</p>
+                <p>$ {item.price}</p>
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "@tanstack/react-router";
 
 const HeaderComponent = () => {
   return (
@@ -6,11 +7,13 @@ const HeaderComponent = () => {
       <header className='flex justify-between items-center px-28 py-6'>
         <div className='flex items-center space-x-2'>
           <div className='rounded flex items-center justify-center'>
+            <Link to={'/products'}>
             <img
               src='/img.png'
               alt='Fashion models in outdoor setting'
               className='h-6 object-cover'
             />
+            </Link>
           </div>
         </div>
         <button className='flex items-center space-x-2 text-gray-600'>
