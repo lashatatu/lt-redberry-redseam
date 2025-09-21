@@ -1,4 +1,4 @@
-import { createFileRoute,Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import ProductsPageComponent from "../Components/ProductsPageComponent.jsx";
 
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/products")({
 
 function RouteComponent () {
   const { data: products } = useSuspenseQuery(productsQueryOptions());
-  console.log(products);
+
   return <div>
 
     <ProductsPageComponent products={products} />

@@ -1,5 +1,6 @@
 import { Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 const LogInComponent = ({onRegisterClick}) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +18,7 @@ const LogInComponent = ({onRegisterClick}) => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  /*const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
@@ -40,7 +41,47 @@ const LogInComponent = ({onRegisterClick}) => {
     } catch (err) {
       setError('Network error.');
     }
+  };*/
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(false);
+    mutate(formData);
   };
+
+  const loginMutation = async (data) => {
+    const response = await fetch(import.meta.env.VITE_LOG_IN_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const res = await response.json();
+      throw new Error(res.message || "Login failed.");
+    }
+
+    return response.json();
+  };
+
+  const { mutate } = useMutation({
+    mutationFn: loginMutation,
+
+    onSuccess: (data) => {
+      setSuccess(true);
+      setError(null);
+      localStorage.setItem('isLoggedIn', 'true');
+    },
+    onError: (err) => {
+      setError(err.message || "Failed to log in");
+      setSuccess(false);
+    },
+  });
+
+
   return (
     <div className='w-3/5 flex'>
       <div className='flex-1 flex items-center justify-center'>
