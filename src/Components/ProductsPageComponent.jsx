@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import PriceFilterComponent from "./PriceFilterComponent.jsx";
 import ProductsSortByComponent from "./ProductsSortByComponent.jsx";
 import ProductsPaginationComponent from "./ProductsPaginationComponent.jsx";
+import ProductsItemCardComponent from "./ProductsItemCardComponent.jsx";
 
 const ProductsPageComponent = ({ products }) => {
   const [showFilter, setShowFilter] = useState(false);
@@ -27,9 +28,6 @@ const ProductsPageComponent = ({ products }) => {
       return !prev;
     });
   };
-
-  products.data.map(item=> console.log(item.id))
-
   return (
     <div className='px-28'>
 
@@ -40,19 +38,7 @@ const ProductsPageComponent = ({ products }) => {
           <ProductsSortByComponent sortByRef={sortByRef} showSortBy={showSortBy} onToggle={handleToggleSortBy} />
         </div>
       </div>
-      <div className='grid grid-cols-4 gap-4'>
-        {products.data.map((item) => (
-          <Link to={`../product/${item.id}`} key={item.id}>
-            <div className='pb-12'>
-              <img src={item.cover_image} alt='' className=' w-100 pb-4' />
-              <div className='font-semibold'>
-                <p className='pb-4'>{item.name}</p>
-                <p>$ {item.price}</p>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+      <ProductsItemCardComponent products={products}/>
       <div className='flex justify-center py-12'>
         <ProductsPaginationComponent products={products} />
       </div>
