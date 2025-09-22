@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import PriceFilterComponent from "./PriceFilterComponent.jsx";
 import ProductsSortByComponent from "./ProductsSortByComponent.jsx";
+import ProductsPaginationComponent from "./ProductsPaginationComponent.jsx";
 
 const ProductsPageComponent = ({ products }) => {
   const [showFilter, setShowFilter] = useState(false);
@@ -27,8 +28,13 @@ const ProductsPageComponent = ({ products }) => {
     });
   };
 
+  products.data.map(item=> console.log(item.id))
+
   return (
     <div className='px-28'>
+      <div className='flex justify-center py-12'>
+        <ProductsPaginationComponent products={products} />
+      </div>
       <div className='flex justify-between py-12'>
         <h1 className='text-4xl font-bold'>Products</h1>
         <div className='flex items-center space-x-4'>
@@ -49,6 +55,7 @@ const ProductsPageComponent = ({ products }) => {
           </Link>
         ))}
       </div>
+
     </div>
   );
 };
