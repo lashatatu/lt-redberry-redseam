@@ -1,15 +1,15 @@
 import React from "react";
 
 const ProductsSortByComponent = ({
-  setShowSortBy,
   showSortBy,
-  sortByRef
+  sortByRef,
+  onToggle
 }) => {
   return (
     <div className='relative' ref={sortByRef}>
       <button
         className='flex items-center space-x-2 text-gray-600'
-        onClick={() => setShowSortBy((prev) => !prev)}
+        onClick={onToggle}
         type='button'
       >
         <span>Sort By</span>

@@ -1,11 +1,11 @@
 import React from "react";
 
-const PriceFilterComponent = ({filterRef,setShowFilter,showFilter}) => {
+const PriceFilterComponent = ({filterRef,showFilter,onToggle}) => {
   return (
     <div className='relative' ref={filterRef}>
       <button
         className='flex items-center space-x-2 text-gray-600'
-        onClick={() => setShowFilter((prev) => !prev)}
+        onClick={onToggle}
         type='button'
       >
         <svg width='20' height='20' viewBox='0 0 24 25' fill='none' xmlns='http://www.w3.org/2000/svg'>
