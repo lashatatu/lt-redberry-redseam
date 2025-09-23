@@ -36,9 +36,9 @@ function getPagination (current, total) {
   return result;
 }
 
-const ProductsPaginationComponent = ({ products, sort }) => {
-  const currentPage = products.meta.current_page;
-  const totalPages = products.meta.last_page;
+const ProductsPaginationComponent = ({ products, sort, price_from, price_to }) => {
+  const totalPages = products?.meta?.last_page || 1;
+  const currentPage = products?.meta?.current_page || 1;
   const pages = getPagination(currentPage, totalPages);
 
   return (
@@ -66,7 +66,7 @@ const ProductsPaginationComponent = ({ products, sort }) => {
         ) : (
           <Link
             to='/products'
-            search={{ page: currentPage - 1, sort }}
+            search={{ page: currentPage - 1, sort, price_from, price_to }}
             className='border border-gray-200 p-1 transition-colors flex items-center justify-center min-w-[40px]'
             aria-disabled={currentPage === 1}
           >
@@ -98,7 +98,7 @@ const ProductsPaginationComponent = ({ products, sort }) => {
             <Link
               key={idx}
               to='/products'
-              search={{ page: pageNum, sort }}
+              search={{ page: pageNum, sort, price_from, price_to }}
               aria-current={pageNum === currentPage ? "page" : undefined}
               className={`border border-gray-200 rounded p-1 transition-colors flex items-center justify-center min-w-[40px] ${
                 pageNum === currentPage ? "text-red-500 border-red-500" : ""
@@ -130,7 +130,7 @@ const ProductsPaginationComponent = ({ products, sort }) => {
         ) : (
           <Link
             to='/products'
-            search={{ page: currentPage + 1, sort }}
+            search={{ page: currentPage + 1, sort, price_from, price_to }}
             className='border border-gray-200 p-1 transition-colors flex items-center justify-center min-w-[40px]'
             aria-disabled={currentPage === totalPages}
           >
