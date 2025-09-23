@@ -2,9 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import ProductsPageComponent from "../Components/ProductsPageComponent.jsx";
 
-const fetchProducts = async (page = 1) => {
+const fetchProducts = async (page = 1, sort) => {
   const url = new URL(import.meta.env.VITE_PRODUCT_ID_ENDPOINT);
   url.searchParams.set("page", page);
+  if (sort) {
+    url.searchParams.set("sort", sort);
+  }
   const res = await fetch(url, {
     headers: {
       Accept: "application/json"
@@ -16,14 +19,17 @@ const fetchProducts = async (page = 1) => {
   return res.json();
 };
 
-const productsQueryOptions = (page = 1) => queryOptions({
-  queryKey: ["products", page],
-  queryFn: () => fetchProducts(page)
+const productsQueryOptions = (page = 1, sort) => queryOptions({
+  queryKey: ["products", page, sort],
+  queryFn: () => fetchProducts(page, sort)
 });
 
 export const Route = createFileRoute("/products")({
   validateSearch: (search) => {
-    return { page: Number(search.page) || 1 };
+    return {
+      page: Number(search.page) || 1,
+      sort: search.sort || undefined
+    };
   },
   head: () => ({
     meta: [
@@ -37,19 +43,29 @@ export const Route = createFileRoute("/products")({
     context: { queryClient },
     search = {}
   }) => {
-    const { page = 1 } = search;
-    return queryClient.ensureQueryData(productsQueryOptions(page));
+    const { page = 1, sort } = search;
+    return queryClient.ensureQueryData(productsQueryOptions(page, sort));
   }
 });
 
-
 function RouteComponent() {
-  const { page } = Route.useSearch();
-  const { data: products } = useSuspenseQuery(productsQueryOptions(page));
+  const { page, sort } = Route.useSearch();
+  const { data: products } = useSuspenseQuery(productsQueryOptions(page, sort));
+  const navigate = Route.useNavigate();
+
+  const handleSort = (newSort) => {
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        sort: newSort,
+        page: 1
+      })
+    });
+  };
 
   return (
     <div>
-      <ProductsPageComponent products={products} />
+      <ProductsPageComponent products={products} sort={sort} onSort={handleSort} />
     </div>
   );
 }

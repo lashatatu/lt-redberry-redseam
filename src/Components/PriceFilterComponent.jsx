@@ -1,6 +1,6 @@
 import React from "react";
 
-const PriceFilterComponent = ({filterRef,showFilter,onToggle}) => {
+const PriceFilterComponent = ({filterRef,showFilter,onToggle,onSort}) => {
   return (
     <div className='relative' ref={filterRef}>
       <button
@@ -23,7 +23,7 @@ const PriceFilterComponent = ({filterRef,showFilter,onToggle}) => {
           <div className="mb-4">
             <span className="block font-semibold text-lg text-gray-900 mb-2">Select price</span>
             <div className="flex space-x-2 mb-2">
-              <input  placeholder="From *" className="w-1/2 border border-gray-300 rounded-md px-3 py-2 text-sm " />
+              <input  placeholder="From *" className="w-1/2 border border-gray-300 rounded-md px-3 py-2 text-sm " onClick={()=>onSort(``)} />
               <input  placeholder="To *" className="w-1/2 border border-gray-300 rounded-md px-3 py-2 text-sm " />
             </div>
             <button className="bg-orange-600 text-white py-2 px-10 rounded-md font-medium mt-2 transition-colors hover:bg-orange-700 cursor-pointer float-right">Apply</button>

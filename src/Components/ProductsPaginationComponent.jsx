@@ -22,13 +22,10 @@ function getPagination (current, total) {
     pagesSet.add(current + 1);
   }
 
-  // Remove out-of-range
   const pages = Array.from(pagesSet)
     .filter((p) => p >= 1 && p <= total);
-  // Sort
   pages.sort((a, b) => a - b);
 
-  // Insert ellipsis
   const result = [];
   for ( let i = 0; i < pages.length; i++ ) {
     result.push(pages[i]);
@@ -39,7 +36,7 @@ function getPagination (current, total) {
   return result;
 }
 
-const ProductsPaginationComponent = ({ products }) => {
+const ProductsPaginationComponent = ({ products, sort }) => {
   const currentPage = products.meta.current_page;
   const totalPages = products.meta.last_page;
   const pages = getPagination(currentPage, totalPages);
@@ -47,9 +44,8 @@ const ProductsPaginationComponent = ({ products }) => {
   return (
     <div className='flex flex-col gap-2 items-center'>
       <div className='flex flex-row gap-2'>
-        {/* Previous Button */}
         {currentPage === 1 ? (
-          <div className='p-1 transition-colors opacity-50 cursor-not-allowed select-none flex items-center justify-center min-w-[40px]'>
+          <div className='border border-gray-200 p-1 transition-colors opacity-50 cursor-not-allowed select-none flex items-center justify-center min-w-[40px]'>
             <span>
               <svg
                 width='20'
@@ -70,8 +66,8 @@ const ProductsPaginationComponent = ({ products }) => {
         ) : (
           <Link
             to='/products'
-            search={{ page: currentPage - 1 }}
-            className='p-1 transition-colors flex items-center justify-center min-w-[40px]'
+            search={{ page: currentPage - 1, sort }}
+            className='border border-gray-200 p-1 transition-colors flex items-center justify-center min-w-[40px]'
             aria-disabled={currentPage === 1}
           >
             <svg
@@ -90,7 +86,6 @@ const ProductsPaginationComponent = ({ products }) => {
             </svg>
           </Link>
         )}
-        {/* Page Numbers */}
         {pages.map((pageNum, idx) =>
           pageNum === "..." ? (
             <div
@@ -103,7 +98,7 @@ const ProductsPaginationComponent = ({ products }) => {
             <Link
               key={idx}
               to='/products'
-              search={{ page: pageNum }}
+              search={{ page: pageNum, sort }}
               aria-current={pageNum === currentPage ? "page" : undefined}
               className={`border border-gray-200 rounded p-1 transition-colors flex items-center justify-center min-w-[40px] ${
                 pageNum === currentPage ? "text-red-500 border-red-500" : ""
@@ -113,7 +108,6 @@ const ProductsPaginationComponent = ({ products }) => {
             </Link>
           )
         )}
-        {/* Next Button */}
         {currentPage === totalPages ? (
           <div className='border border-gray-200 p-1 transition-colors opacity-50 cursor-not-allowed select-none flex items-center justify-center min-w-[40px]'>
             <span>
@@ -136,8 +130,8 @@ const ProductsPaginationComponent = ({ products }) => {
         ) : (
           <Link
             to='/products'
-            search={{ page: currentPage + 1 }}
-            className='p-1 transition-colors flex items-center justify-center min-w-[40px]'
+            search={{ page: currentPage + 1, sort }}
+            className='border border-gray-200 p-1 transition-colors flex items-center justify-center min-w-[40px]'
             aria-disabled={currentPage === totalPages}
           >
             <svg
