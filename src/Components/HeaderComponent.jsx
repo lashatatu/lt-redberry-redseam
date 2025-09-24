@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { HiShoppingCart, HiMiniUser } from "react-icons/hi2";
+import CartModal from "./CartModal.jsx";
 
 const HeaderComponent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [avatar, setAvatar] = useState("");
+  const [open, setOpen] = useState(true)
 
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
@@ -35,7 +37,10 @@ const HeaderComponent = () => {
           <span>
             {isLoggedIn ? (
               <div className='flex items-center space-x-3'>
-                <HiShoppingCart size={24} fill='black' />
+                <button onClick={() => setOpen(true)}>
+                  <HiShoppingCart size={24} fill='black' />
+                </button>
+                {open && <CartModal openModal={open} onClose={setOpen} />}
                 {avatar ? (
                   <img
                     src={avatar}
