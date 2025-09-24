@@ -1,6 +1,7 @@
 import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import RegisterImageUploadComponent from "./RegisterImageUploadComponent.jsx";
 
 const registerUser = async (formData) => {
   const data = new FormData();
@@ -80,6 +81,7 @@ const RegisterComponent = ({ onLoginClick }) => {
         <div className='w-full h-1/2 max-w-3/5 mb-12'>
           <h1 className='text-5xl font-bold text-gray-900 mb-12'>Register</h1>
           <form onSubmit={handleSubmit} className='space-y-6' encType='multipart/form-data'>
+            <RegisterImageUploadComponent/>
             <div>
               <input
                 type='text'
