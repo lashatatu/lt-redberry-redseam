@@ -74,6 +74,8 @@ const LogInComponent = ({onRegisterClick}) => {
       setSuccess(true);
       setError(null);
       localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userAvatar', data.user.avatar || '');
     },
     onError: (err) => {
       setError(err.message || "Failed to log in");

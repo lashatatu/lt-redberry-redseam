@@ -36,9 +36,13 @@ const RegisterComponent = ({ onLoginClick }) => {
     avatar: null,
   });
 
+  const handleAvatarChange = (file) => {
+    setFormData((prev) => ({ ...prev, avatar: file }));
+  };
+
   const mutation = useMutation({
     mutationFn: registerUser,
-    onSuccess: () => {
+    onSuccess: (data) => {
       setFormData({
         username: '',
         email: '',
@@ -46,6 +50,9 @@ const RegisterComponent = ({ onLoginClick }) => {
         password_confirmation: '',
         avatar: null,
       });
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userAvatar', data.user.avatar || '');
     },
   });
 
@@ -81,7 +88,7 @@ const RegisterComponent = ({ onLoginClick }) => {
         <div className='w-full h-1/2 max-w-3/5 mb-12'>
           <h1 className='text-5xl font-bold text-gray-900 mb-12'>Register</h1>
           <form onSubmit={handleSubmit} className='space-y-6' encType='multipart/form-data'>
-            <RegisterImageUploadComponent/>
+            <RegisterImageUploadComponent onImageChange={handleAvatarChange}/>
             <div>
               <input
                 type='text'

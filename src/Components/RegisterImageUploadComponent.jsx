@@ -1,7 +1,7 @@
 import { FaCamera } from "react-icons/fa6";
 import { useRef, useState } from "react";
 
-const RegisterImageUploadComponent = () => {
+const RegisterImageUploadComponent = ({ onImageChange }) => {
   const [uploadImage, setUploadImage] = useState("");
   const fileInputRef = useRef(null);
 
@@ -13,12 +13,16 @@ const RegisterImageUploadComponent = () => {
         setUploadImage(reader.result);
       };
       reader.readAsDataURL(file);
+      if (onImageChange) onImageChange(file); // Pass file to parent
+    } else {
+      if (onImageChange) onImageChange(null);
     }
   };
 
   const handleRemove = () => {
     setUploadImage("");
     if (fileInputRef.current) fileInputRef.current.value = "";
+    if (onImageChange) onImageChange(null);
   };
 
   const openFileDialog = () => {
