@@ -34,7 +34,7 @@ const ProductDetails = ({ product }) => {
       {/*first column grid for images*/}
       <div className='grid grid-cols-[8rem_minmax(750px,_1fr)1fr] gap-4 items-start'>
         <div>
-          {product.images.map(item => (
+          {product.images?.map(item => (
             <div className='mb-4 border-red-600 w-30' key={item}>
               <img src={item} alt='' className='w-30' />
             </div>
@@ -55,7 +55,7 @@ const ProductDetails = ({ product }) => {
             )}
             </div>
             <div className='flex gap-8'>
-              {product.available_colors.map((color, idx) => (
+              {product.available_colors?.map((color, idx) => (
                 <div
                   key={idx}
                   className={`p-1 rounded-full border-1 flex items-center justify-center ${selectedColor === color ? 'border-gray-300' : 'border-transparent'}`}
@@ -76,7 +76,7 @@ const ProductDetails = ({ product }) => {
             )}
             </div>
             <div className='flex gap-2 pb-12'>
-              {product.available_sizes.map((size, idx) => (
+              {product.available_sizes?.map((size, idx) => (
                 <div
                   key={idx}
                   className={`border rounded-lg border-gray-200 w-12 flex justify-center items-center cursor-pointer ${selectedSize ===
