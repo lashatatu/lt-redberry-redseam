@@ -13,7 +13,7 @@ const RegisterImageUploadComponent = ({ onImageChange }) => {
         setUploadImage(reader.result);
       };
       reader.readAsDataURL(file);
-      if (onImageChange) onImageChange(file); // Pass file to parent
+      if (onImageChange) onImageChange(file);
     } else {
       if (onImageChange) onImageChange(null);
     }

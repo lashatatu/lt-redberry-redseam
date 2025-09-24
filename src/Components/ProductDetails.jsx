@@ -8,7 +8,7 @@ const ProductDetails = ({ product }) => {
     "Beige": "bg-yellow-100",
     "Navy Blue": "bg-blue-900",
     "Peach": "bg-orange-200",
-    "White": "bg-gray-100",
+    "White": "white",
     "Blue": "bg-blue-500",
     "Grey": "bg-gray-500",
     "Cream": "bg-yellow-50",
@@ -61,7 +61,7 @@ const ProductDetails = ({ product }) => {
                   className={`p-1 rounded-full border-1 flex items-center justify-center ${selectedColor === color ? 'border-gray-300' : 'border-transparent'}`}
                 >
                   <div
-                    className={`w-10 h-10 rounded-full flex justify-center items-center cursor-pointer ${uniqueCollors[color]}`}
+                    className={`w-10 h-10 shadow-[0_0_8px_rgba(0,0,0,0.2)] rounded-full flex justify-center items-center cursor-pointer ${uniqueCollors[color]}`}
                     onClick={() => setSelectedColor(color)}
                     title={color}
                   >
