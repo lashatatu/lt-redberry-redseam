@@ -1,7 +1,30 @@
 import { useState } from "react";
 
 const ProductDetails = ({ product }) => {
-
+  const uniqueCollors = {
+    "Yellow": "bg-yellow-500",
+    "Green": "bg-green-500",
+    "Black": "bg-black",
+    "Beige": "bg-yellow-100",
+    "Navy Blue": "bg-blue-900",
+    "Peach": "bg-orange-200",
+    "White": "bg-gray-100",
+    "Blue": "bg-blue-500",
+    "Grey": "bg-gray-500",
+    "Cream": "bg-yellow-50",
+    "Pink": "bg-pink-500",
+    "Purple": "bg-purple-500",
+    "Maroon": "bg-red-900",
+    "Orange": "bg-orange-500",
+    "Brown": "bg-yellow-900",
+    "Olive": "bg-green-700",
+    "Red": "bg-red-500",
+    "Multi": "bg-gradient-to-r from-pink-500 via-yellow-500 to-blue-500",
+    "Khaki": "bg-yellow-200",
+    "Mauve": "bg-purple-200",
+    "Off White": "bg-gray-100",
+    "Magenta": "bg-pink-700"
+  };
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   return (
@@ -28,17 +51,22 @@ const ProductDetails = ({ product }) => {
           <p className='text-3xl font-bold pb-6'>$ {product.price}</p>
           <div className='pb-6'>
             <div className='flex pb-4'>Color: {selectedColor && (
-              <span className='ml-2'>
-                {selectedColor}
-              </span>
+              <span className='ml-2'>{selectedColor}</span>
             )}
             </div>
-            <div className='flex gap-2'>
+            <div className='flex gap-8'>
               {product.available_colors.map((color, idx) => (
                 <div
                   key={idx}
-                  className='border rounded-4xl flex justify-center items-center cursor-pointer'
-                  onClick={() => setSelectedColor(color)}>{color}</div>
+                  className={`p-1 rounded-full border-1 flex items-center justify-center ${selectedColor === color ? 'border-gray-300' : 'border-transparent'}`}
+                >
+                  <div
+                    className={`w-10 h-10 rounded-full flex justify-center items-center cursor-pointer ${uniqueCollors[color]}`}
+                    onClick={() => setSelectedColor(color)}
+                    title={color}
+                  >
+                  </div>
+                </div>
               ))}
             </div>
           </div>
