@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const ProductDetails = ({ product }) => {
-  const uniqueCollors = {
+  const uniqueColors = {
     "Yellow": "bg-yellow-500",
     "Green": "bg-green-500",
     "Black": "bg-black",
@@ -27,6 +27,24 @@ const ProductDetails = ({ product }) => {
   };
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+
+  useEffect(() => {
+    // Set default size
+    if (product && product.available_sizes && product.available_sizes.length > 0) {
+      if (product.available_sizes.includes("M")) {
+        setSelectedSize("M");
+      } else {
+        setSelectedSize(product.available_sizes[0]);
+      }
+    }
+    // Set default color and color index
+    if (product && product.available_colors && product.available_colors.length > 0) {
+      setSelectedColor(product.available_colors[0]);
+      setSelectedColorIndex(0);
+    }
+  }, [product]);
+
   return (
     <div className='px-28'>
       <p className='pb-12 pt-6'>Listing / Products</p>
@@ -42,7 +60,9 @@ const ProductDetails = ({ product }) => {
         </div>
         {/*second column solo image*/}
         <div>
-          <img src={product.cover_image} className='w-[700px]' alt='' />
+          {product.images && product.images.length > 0 && (
+            <img src={product.images[selectedColorIndex] || product.images[0]} className='w-[700px]' alt='' />
+          )}
         </div>
 
         {/*third column data*/}
@@ -61,8 +81,8 @@ const ProductDetails = ({ product }) => {
                   className={`p-1 rounded-full border-1 flex items-center justify-center ${selectedColor === color ? 'border-gray-300' : 'border-transparent'}`}
                 >
                   <div
-                    className={`w-10 h-10 shadow-[0_0_8px_rgba(0,0,0,0.2)] rounded-full flex justify-center items-center cursor-pointer ${uniqueCollors[color]}`}
-                    onClick={() => setSelectedColor(color)}
+                    className={`w-10 h-10 shadow-[0_0_8px_rgba(0,0,0,0.2)] rounded-full flex justify-center items-center cursor-pointer ${uniqueColors[color]}`}
+                    onClick={() => { setSelectedColor(color); setSelectedColorIndex(idx); }}
                     title={color}
                   >
                   </div>
