@@ -1,9 +1,8 @@
-import HeaderComponent from "./Components/HeaderComponent.jsx";
 import HeroComponent from "./Components/HeroComponent.jsx";
-import React from "react";
+import  { useState } from "react";
 
 function App() {
-  const [showRegister, setShowRegister] = React.useState(false);
+  const [showRegister, setShowRegister] = useState(false);
 
 
 

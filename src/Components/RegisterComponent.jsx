@@ -1,5 +1,29 @@
 import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+
+const registerUser = async (formData) => {
+  const data = new FormData();
+  data.append('username', formData.username);
+  data.append('email', formData.email);
+  data.append('password', formData.password);
+  data.append('password_confirmation', formData.password_confirmation);
+  if (formData.avatar) {
+    data.append('avatar', formData.avatar);
+  }
+  const response = await fetch(import.meta.env.VITE_REGISTER_ENDPOINT, {
+    method: 'POST',
+    body: data,
+    headers: {
+      'Accept': 'application/json',
+    },
+  });
+  if (!response.ok) {
+    const res = await response.json();
+    throw new Error(res.message || 'Registration failed.');
+  }
+  return response.json();
+};
 
 const RegisterComponent = ({ onLoginClick }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,8 +34,19 @@ const RegisterComponent = ({ onLoginClick }) => {
     password_confirmation: '',
     avatar: null,
   });
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+
+  const mutation = useMutation({
+    mutationFn: registerUser,
+    onSuccess: () => {
+      setFormData({
+        username: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+        avatar: null,
+      });
+    },
+  });
 
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -26,48 +61,17 @@ const RegisterComponent = ({ onLoginClick }) => {
         [name]: value,
       });
     }
+    if (mutation.isError || mutation.isSuccess) mutation.reset();
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(false);
     if (formData.password !== formData.password_confirmation) {
-      setError('Passwords do not match.');
+      mutation.reset();
+      mutation.mutate({ ...formData, error: 'Passwords do not match.' });
       return;
     }
-    try {
-      const data = new FormData();
-      data.append('username', formData.username);
-      data.append('email', formData.email);
-      data.append('password', formData.password);
-      data.append('password_confirmation', formData.password_confirmation);
-      if (formData.avatar) {
-        data.append('avatar', formData.avatar);
-      }
-      const response = await fetch(import.meta.env.VITE_REGISTER_ENDPOINT, {
-        method: 'POST',
-        body: data,
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
-      if (response.ok) {
-        setSuccess(true);
-        setFormData({
-          username: '',
-          email: '',
-          password: '',
-          password_confirmation: '',
-          avatar: null,
-        });
-      } else {
-        const res = await response.json();
-        setError(res.message || 'Registration failed.');
-      }
-    } catch (err) {
-      setError('Network error.');
-    }
+    mutation.mutate(formData);
   };
 
   return (
@@ -114,7 +118,7 @@ const RegisterComponent = ({ onLoginClick }) => {
                 />
                 <button
                   type='button'
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => setShowPassword( !showPassword)}
                   className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600'
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -142,18 +146,14 @@ const RegisterComponent = ({ onLoginClick }) => {
                 </button>
               </div>
             </div>
-            <div>
-              <input
-                type='file'
-                id='avatar'
-                name='avatar'
-                accept='image/*'
-                onChange={handleInputChange}
-                className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent'
-              />
-            </div>
-            {error && <div className='text-red-500 text-center'>{error}</div>}
-            {success && <div className='text-green-600 text-center'>Registration successful!</div>}
+            {mutation.isError && (
+              <div className='text-red-500 text-center'>
+                {mutation.error?.message || mutation.error?.error || 'Network error.'}
+              </div>
+            )}
+            {mutation.isSuccess && !mutation.isError && (
+              <div className='text-green-600 text-center'>Registration successful!</div>
+            )}
             <button
               type='submit'
               className='w-full bg-orange-600 text-white py-2 rounded-lg font-medium transition-colors mt-6'
