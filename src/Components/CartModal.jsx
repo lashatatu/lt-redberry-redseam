@@ -1,6 +1,7 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
 import { IoMdClose } from "react-icons/io";
-import { useQuery } from "@tanstack/react-query";
+import { FaPlus, FaMinus } from "react-icons/fa6";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 
 const fetchCart = async (token) => {
@@ -16,11 +17,60 @@ const fetchCart = async (token) => {
   return response.json();
 };
 
+const patchCartItem = async ({
+  token,
+  id,
+  color,
+  size,
+  quantity
+}) => {
+  const response = await fetch(`${import.meta.env.VITE_CART_ENDPOINT}/products/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      color,
+      size,
+      quantity
+    })
+  });
+  if ( !response.ok ) {
+    throw new Error(await response.text());
+  }
+  return response.json();
+};
+
+const deleteCartItem = async ({
+  token,
+  id,
+  color,
+  size
+}) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_CART_ENDPOINT}/products/${id}` +
+    `?color=${encodeURIComponent(color)}&size=${encodeURIComponent(size)}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/json"
+      }
+    });
+  if ( !response.ok ) {
+    throw new Error(await response.text());
+  }
+  return id;
+};
+
 const CartModal = ({
   openModal,
   onClose
 }) => {
   const token = localStorage.getItem("token");
+  const queryClient = useQueryClient();
 
   const {
     data: cart = [],
@@ -31,6 +81,35 @@ const CartModal = ({
     queryFn: () => fetchCart(token),
     enabled: !!token && openModal
   });
+
+  const patchMutation = useMutation({
+    mutationFn: patchCartItem,
+    onSuccess: () => queryClient.invalidateQueries(["cart", token])
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteCartItem,
+    onSuccess: () => queryClient.invalidateQueries(["cart", token])
+  });
+
+  const handleQuantityChange = (product, newQuantity) => {
+    patchMutation.mutate({
+      token,
+      id: product.id,
+      color: product.color,
+      size: product.size,
+      quantity: newQuantity
+    });
+  };
+
+  const handleRemove = (product) => {
+    deleteMutation.mutate({
+      token,
+      id: product.id,
+      color: product.color,
+      size: product.size
+    });
+  };
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const delivery = cart.length === 0 ? 0 : 5;
@@ -106,10 +185,25 @@ const CartModal = ({
                                       <p className='mt-1 text-sm text-gray-500'>{product.color} / {product.size}</p>
                                     </div>
                                     <div className='flex flex-1 items-end justify-between text-sm'>
-                                      <p className='text-gray-500'>Qty {product.quantity}</p>
-                                      <div className='flex'>
-                                        {/*remove functionality will be added here*/}
-                                      </div>
+                                      <button className='flex text-xs font-bold items-center gap-2 border rounded-4xl'>
+                                        <button
+                                          className='pl-2 py-1 disabled:opacity-50'
+                                          disabled={product.quantity === 1 || patchMutation.isLoading}
+                                          onClick={() => handleQuantityChange(product, product.quantity - 1)}
+                                        ><FaMinus /></button>
+                                        <span>{product.quantity}</span>
+                                        <button
+                                          className='pr-2 py-1  disabled:opacity-50'
+                                          disabled={patchMutation.isLoading}
+                                          onClick={() => handleQuantityChange(product, product.quantity + 1)}
+                                        ><FaPlus /></button>
+                                      </button>
+                                      <button
+                                        className='text-gray-500 hover:text-red-600 ml-4 text-base font-medium'
+                                        onClick={() => handleRemove(product)}
+                                        disabled={deleteMutation.isLoading}
+                                      >Remove
+                                      </button>
                                     </div>
                                   </div>
                                 </li>
