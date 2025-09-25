@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { HiOutlineShoppingCart } from "react-icons/hi2";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const ProductDetails = ({ product }) => {
   const uniqueColors = {
@@ -28,18 +30,48 @@ const ProductDetails = ({ product }) => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const queryClient = useQueryClient();
+  const token = localStorage.getItem('token');
+
+  const mutation = useMutation({
+    mutationFn: async (item) => {
+      const response = await fetch(`${import.meta.env.VITE_CART_ENDPOINT}/products/${item.id}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          quantity: item.quantity,
+          color: item.color,
+          size: item.size,
+        })
+      });
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['cart', token]);
+    }
+  });
+
+  const handleAddToCart = (item) => {
+    mutation.mutate(item);
+  };
 
   useEffect(() => {
-    // Set default size
-    if (product && product.available_sizes && product.available_sizes.length > 0) {
-      if (product.available_sizes.includes("M")) {
+    if ( product && product.available_sizes && product.available_sizes.length > 0 ) {
+      if ( product.available_sizes.includes("M") ) {
         setSelectedSize("M");
       } else {
         setSelectedSize(product.available_sizes[0]);
       }
     }
-    // Set default color and color index
-    if (product && product.available_colors && product.available_colors.length > 0) {
+    if ( product && product.available_colors && product.available_colors.length > 0 ) {
       setSelectedColor(product.available_colors[0]);
       setSelectedColorIndex(0);
     }
@@ -78,11 +110,15 @@ const ProductDetails = ({ product }) => {
               {product.available_colors?.map((color, idx) => (
                 <div
                   key={idx}
-                  className={`p-1 rounded-full border-1 flex items-center justify-center ${selectedColor === color ? 'border-gray-300' : 'border-transparent'}`}
+                  className={`p-1 rounded-full border-1 flex items-center justify-center ${selectedColor ===
+                  color ? "border-gray-300" : "border-transparent"}`}
                 >
                   <div
                     className={`w-10 h-10 shadow-[0_0_8px_rgba(0,0,0,0.2)] rounded-full flex justify-center items-center cursor-pointer ${uniqueColors[color]}`}
-                    onClick={() => { setSelectedColor(color); setSelectedColorIndex(idx); }}
+                    onClick={() => {
+                      setSelectedColor(color);
+                      setSelectedColorIndex(idx);
+                    }}
                     title={color}
                   >
                   </div>
@@ -106,20 +142,31 @@ const ProductDetails = ({ product }) => {
             </div>
             <div className='pb-12'>
               <div>Quantity</div>
-              <input type='number' defaultValue={1} className='w-12 border border-gray-300 rounded text-center' />
+              <input
+                type='number'
+                min={1}
+                value={quantity}
+                onChange={e => setQuantity(Number(e.target.value))}
+                className='w-12 border border-gray-300 rounded text-center'
+              />
             </div>
 
-            <button className='bg-orange-700 w-full rounded-lg cursor-pointer mb-12'>
+            <button
+              className='bg-orange-700 w-full rounded-lg cursor-pointer mb-12'
+              onClick={() => handleAddToCart({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                color: selectedColor,
+                size: selectedSize,
+                image: product.images[selectedColorIndex] || product.images[0],
+                quantity
+              })}
+              disabled={mutation.isLoading}
+            >
               <div className='items-center flex justify-center p-2'>
-                <svg width='24' height='24' viewBox='0 0 24 25' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                  <path
-                    d='M2.25 3.5H3.63568C4.14537 3.5 4.59138 3.84265 4.7227 4.33513L5.1059 5.77209M7.5 14.75C5.84315 14.75 4.5 16.0931 4.5 17.75H20.25M7.5 14.75H18.7183C19.8394 12.4494 20.8177 10.0664 21.6417 7.6125C16.88 6.39646 11.8905 5.75 6.75 5.75C6.20021 5.75 5.65214 5.7574 5.1059 5.77209M7.5 14.75L5.1059 5.77209M6 20.75C6 21.1642 5.66421 21.5 5.25 21.5C4.83579 21.5 4.5 21.1642 4.5 20.75C4.5 20.3358 4.83579 20 5.25 20C5.66421 20 6 20.3358 6 20.75ZM18.75 20.75C18.75 21.1642 18.4142 21.5 18 21.5C17.5858 21.5 17.25 21.1642 17.25 20.75C17.25 20.3358 17.5858 20 18 20C18.4142 20 18.75 20.3358 18.75 20.75Z'
-                    stroke='white'
-                    strokeWidth='1.5'
-                    strokeLinecap='round'
-                    strokeLinejoin='round' />
-                </svg>
-                <div className='text-white pl-2 text-lg'>Add to Cart</div>
+                <HiOutlineShoppingCart size={24} fill='#CA3500' stroke='white' />
+                <div className='text-white pl-2 text-lg'>{mutation.isLoading ? 'Adding...' : 'Add to Cart'}</div>
               </div>
             </button>
             <hr />

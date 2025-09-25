@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import ProductDetails from "../../../Components/ProductDetails.jsx";
+import CartModal from "../../../Components/CartModal.jsx";
 
 const fetchProduct = async (productId) => {
   const res = await fetch(`${import.meta.env.VITE_PRODUCT_ID_ENDPOINT}/${productId}`, {
@@ -32,7 +34,10 @@ export const Route = createFileRoute("/product/$productId/")({
 function ProductId () {
   const { productId } = Route.useParams();
   const { data: product } = useSuspenseQuery(productQueryOptions(productId));
+  const [openModal, setOpenModal] = useState(false);
+
   return <div>
     <ProductDetails product={product} />
+    <CartModal openModal={openModal} onClose={setOpenModal} />
   </div>;
 }

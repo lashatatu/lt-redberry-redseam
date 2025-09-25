@@ -6,7 +6,7 @@ import CartModal from "./CartModal.jsx";
 const HeaderComponent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [avatar, setAvatar] = useState("");
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
@@ -37,9 +37,9 @@ const HeaderComponent = () => {
           <span>
             {isLoggedIn ? (
               <div className='flex items-center space-x-3'>
-                <button onClick={() => setOpen(true)}>
+                <div onClick={() => setOpen(true)}>
                   <HiShoppingCart size={24} fill='black' />
-                </button>
+                </div>
                 {open && <CartModal openModal={open} onClose={setOpen} />}
                 {avatar ? (
                   <img
