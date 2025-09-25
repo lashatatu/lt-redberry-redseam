@@ -33,7 +33,7 @@ const CartModal = ({
   });
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const delivery = 5;
+  const delivery = cart.length === 0 ? 0 : 5;
   const total = delivery + subtotal;
 
   return (
@@ -73,9 +73,9 @@ const CartModal = ({
                         {isLoading ? (
                           <div className='py-6 text-center text-gray-500 text-2xl font-bold'>Loading...</div>
                         ) : isError ? (
-                          <div className='py-6 text-center text-red-500 text-2xl font-bold'>Error loading cart!</div>
+                          <div className='py-6 text-center text-red-500 text-2xl font-bold'>Not Logged in</div>
                         ) : (
-                          <ul role='list' className='-my-6 divide-y divide-gray-200'>
+                          <ul role='list' className='-my-6 '>
                             {cart.length === 0 ? (
                               <div className='py-6 flex flex-col text-center  items-center'>
                                 <img src='/img_1.png' alt='Empty Cart' />

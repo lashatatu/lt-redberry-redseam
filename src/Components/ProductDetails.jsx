@@ -101,7 +101,7 @@ const ProductDetails = ({ product }) => {
         <div>
           <h2 className='text-3xl font-bold pb-6'>{product.name}</h2>
           <p className='text-3xl font-bold pb-6'>$ {product.price}</p>
-          <div className='pb-6'>
+          <div className='pb-12'>
             <div className='flex pb-4'>Color: {selectedColor && (
               <span className='ml-2'>{selectedColor}</span>
             )}
@@ -110,11 +110,11 @@ const ProductDetails = ({ product }) => {
               {product.available_colors?.map((color, idx) => (
                 <div
                   key={idx}
-                  className={`p-1 rounded-full border-1 flex items-center justify-center ${selectedColor ===
+                  className={`p-1 rounded-full border-1 flex ${selectedColor ===
                   color ? "border-gray-300" : "border-transparent"}`}
                 >
                   <div
-                    className={`w-10 h-10 shadow-[0_0_8px_rgba(0,0,0,0.2)] rounded-full flex justify-center items-center cursor-pointer ${uniqueColors[color]}`}
+                    className={`w-8 h-8 shadow-[0_0_8px_rgba(0,0,0,0.2)] rounded-full flex cursor-pointer ${uniqueColors[color]}`}
                     onClick={() => {
                       setSelectedColor(color);
                       setSelectedColorIndex(idx);
@@ -141,14 +141,25 @@ const ProductDetails = ({ product }) => {
               ))}
             </div>
             <div className='pb-12'>
-              <div>Quantity</div>
-              <input
-                type='number'
-                min={1}
-                value={quantity}
+              <div className='pb-4'>Quantity</div>
+              <select
+                name='quantity'
+                id='quantity'
+                defaultValue={1}
                 onChange={e => setQuantity(Number(e.target.value))}
-                className='w-12 border border-gray-300 rounded text-center'
-              />
+                className='w-16 border border-gray-300 rounded text-center'
+              >
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+                <option value={4}>4</option>
+                <option value={5}>5</option>
+                <option value={6}>6</option>
+                <option value={7}>7</option>
+                <option value={8}>8</option>
+                <option value={9}>9</option>
+                <option value={10}>10</option>
+              </select>
             </div>
 
             <button
