@@ -172,7 +172,11 @@ const CartModal = ({
                                   <div className='size-24 shrink-0 overflow-hidden rounded-md border border-gray-200'>
                                     <img
                                       alt={product.name}
-                                      src={product.cover_image}
+                                      src={
+                                        product.images[
+                                          product.available_colors.findIndex(c => c === product.color)
+                                          ] || product.images[0]
+                                      }
                                       className='size-full object-cover' />
                                   </div>
 
@@ -185,7 +189,7 @@ const CartModal = ({
                                       <p className='mt-1 text-sm text-gray-500'>{product.color} / {product.size}</p>
                                     </div>
                                     <div className='flex flex-1 items-end justify-between text-sm'>
-                                      <button className='flex text-xs font-bold items-center gap-2 border rounded-4xl'>
+                                      <div className='flex text-xs items-center gap-2 border rounded-4xl border-gray-300'>
                                         <button
                                           className='pl-2 py-1 disabled:opacity-50'
                                           disabled={product.quantity === 1 || patchMutation.isLoading}
@@ -197,7 +201,7 @@ const CartModal = ({
                                           disabled={patchMutation.isLoading}
                                           onClick={() => handleQuantityChange(product, product.quantity + 1)}
                                         ><FaPlus /></button>
-                                      </button>
+                                      </div>
                                       <button
                                         className='text-gray-500 hover:text-red-600 ml-4 text-base font-medium'
                                         onClick={() => handleRemove(product)}
