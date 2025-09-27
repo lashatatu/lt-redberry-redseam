@@ -48,7 +48,7 @@ const HeaderComponent = () => {
                     className='w-10 h-10 rounded-full object-cover border border-gray-300'
                   />
                 ) : (
-                  <div className='w-8 h-8 rounded-full flex items-center justify-center border border-gray-300'>
+                  <div className='w-10 h-10 rounded-full flex items-center justify-center border border-gray-300'>
                     <HiMiniUser size={20} fill='black' />
                   </div>
                 )}

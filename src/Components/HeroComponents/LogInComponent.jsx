@@ -1,8 +1,8 @@
 import { Eye, EyeOff } from "lucide-react";
 import React, { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useLoginMutation } from "../../api/loginLogic";
 
-const LogInComponent = ({onRegisterClick}) => {
+const LogInComponent = ({ onRegisterClick }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -18,30 +18,20 @@ const LogInComponent = ({onRegisterClick}) => {
     });
   };
 
-  /*const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSuccess = (data) => {
+    setSuccess(true);
     setError(null);
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('userAvatar', data.user.avatar || '');
+  };
+
+  const onError = (err) => {
+    setError(err.message || "Failed to log in");
     setSuccess(false);
-    try {
-      const response = await fetch(import.meta.env.VITE_LOG_IN_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        setSuccess(true);
-        setError(null);
-      } else {
-        const res = await response.json();
-        setError(res.message || 'Login failed.');
-      }
-    } catch (err) {
-      setError('Network error.');
-    }
-  };*/
+  };
+
+  const { mutate } = useLoginMutation({ onSuccess, onError });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,40 +39,6 @@ const LogInComponent = ({onRegisterClick}) => {
     setSuccess(false);
     mutate(formData);
   };
-
-  const loginMutation = async (data) => {
-    const response = await fetch(import.meta.env.VITE_LOG_IN_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (!response.ok) {
-      const res = await response.json();
-      throw new Error(res.message || "Login failed.");
-    }
-
-    return response.json();
-  };
-
-  const { mutate } = useMutation({
-    mutationFn: loginMutation,
-
-    onSuccess: (data) => {
-      setSuccess(true);
-      setError(null);
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('userAvatar', data.user.avatar || '');
-    },
-    onError: (err) => {
-      setError(err.message || "Failed to log in");
-      setSuccess(false);
-    },
-  });
-
 
   return (
     <div className='w-3/5 flex'>
@@ -117,7 +73,7 @@ const LogInComponent = ({onRegisterClick}) => {
                 />
                 <button
                   type='button'
-                  onClick={() => setShowPassword( !showPassword)}
+                  onClick={() => setShowPassword(!showPassword)}
                   className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600'
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -137,7 +93,7 @@ const LogInComponent = ({onRegisterClick}) => {
             Not a member?{" "}
             <button
               className='text-orange-500 hover:text-orange-600 font-medium cursor-pointer'
-              onClick={()=>onRegisterClick()}
+              onClick={() => onRegisterClick()}
             >
               Register
             </button>
