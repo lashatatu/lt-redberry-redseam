@@ -126,20 +126,20 @@ const CartModal = ({
 
         <div className='fixed inset-0 overflow-hidden'>
           <div className='absolute inset-0 overflow-hidden'>
-            <div className='pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16'>
+            <div className='pointer-events-none fixed inset-y-0 right-0 flex max-w-full '>
               <DialogPanel
                 transition
-                className='pointer-events-auto w-screen max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700'
+                className='pointer-events-auto w-screen max-w-[540px]'
               >
-                <div className='flex h-full flex-col overflow-y-auto bg-white shadow-xl'>
-                  <div className='flex-1 overflow-y-auto px-4 py-6 sm:px-6'>
+                <div className='flex h-full flex-col bg-white shadow-xl p-10'>
+                  <div className='flex-1'>
                     <div className='flex items-start justify-between'>
                       <DialogTitle className='text-lg font-medium text-gray-900'>Shopping cart ({itemSum})</DialogTitle>
                       <div className='ml-3 flex h-7 items-center'>
                         <button
                           type='button'
                           onClick={() => onClose(false)}
-                          className='relative -m-2 p-2 text-gray-400 hover:text-gray-500'
+                          className='relative -m-2 p-2 text-gray-400'
                         >
                           <span className='absolute -inset-0.5' />
                           <span className='sr-only'>Close panel</span>
@@ -148,7 +148,7 @@ const CartModal = ({
                       </div>
                     </div>
 
-                    <div className='mt-8'>
+                    <div className='pt-14'>
                       <div className='flow-root'>
                         {isLoading ? (
                           <div className='py-6 text-center text-gray-500 text-2xl font-bold'>Loading...</div>
@@ -170,7 +170,7 @@ const CartModal = ({
                             ) : (
                               cart.map((product) => (
                                 <li key={product.id + product.color + product.size} className='flex py-6'>
-                                  <div className='size-24 shrink-0 overflow-hidden rounded-md border border-gray-200'>
+                                  <div className='size-34 shrink-0 overflow-hidden rounded-md border border-gray-200'>
                                     <img
                                       alt={product.name}
                                       src={
@@ -183,28 +183,29 @@ const CartModal = ({
 
                                   <div className='ml-4 flex flex-1 flex-col'>
                                     <div>
-                                      <div className='flex justify-between text-base font-medium text-gray-900'>
+                                      <div className='flex justify-between font-medium text-sm'>
                                         <h3>{product.name}</h3>
-                                        <p className='ml-4'>${product.price}</p>
+                                        <p className='ml-4 text-lg'>${product.price}</p>
                                       </div>
-                                      <p className='mt-1 text-sm text-gray-500'>{product.color} / {product.size}</p>
+                                      <p className='mt-1 text-xs text-gray-500'>{product.color}</p>
+                                      <p className='mt-1 text-xs text-gray-500'>{product.size}</p>
                                     </div>
                                     <div className='flex flex-1 items-end justify-between text-sm'>
-                                      <div className='flex text-xs items-center gap-2 border rounded-4xl border-gray-300'>
+                                      <div className='flex text-xs items-center gap-2 border rounded-3xl pt-1 pr-2 pb-1 pl-2 border-gray-300'>
                                         <button
-                                          className='pl-2 py-1 disabled:opacity-50'
+                                          className='disabled:opacity-50'
                                           disabled={product.quantity === 1 || patchMutation.isLoading}
                                           onClick={() => handleQuantityChange(product, product.quantity - 1)}
                                         ><FaMinus /></button>
                                         <span>{product.quantity}</span>
                                         <button
-                                          className='pr-2 py-1  disabled:opacity-50'
+                                          className='disabled:opacity-50'
                                           disabled={patchMutation.isLoading}
                                           onClick={() => handleQuantityChange(product, product.quantity + 1)}
                                         ><FaPlus /></button>
                                       </div>
                                       <button
-                                        className='text-gray-500 hover:text-red-600 ml-4 text-base font-medium'
+                                        className='text-gray-500 ml-4 text-base'
                                         onClick={() => handleRemove(product)}
                                         disabled={deleteMutation.isLoading}
                                       >Remove
@@ -220,12 +221,12 @@ const CartModal = ({
                     </div>
                   </div>
 
-                  <div className='border-t border-gray-200 px-4 py-6 sm:px-6'>
-                    <div className='flex justify-between text-base font-medium text-gray-500'>
+                  <div className='border-gray-200'>
+                    <div className='flex justify-between text-base font-medium text-gray-500 pb-2'>
                       <p>Items subtotal</p>
                       <p>$ {subtotal}</p>
                     </div>
-                    <div className='flex justify-between text-base font-medium text-gray-500'>
+                    <div className='flex justify-between text-base font-medium text-gray-500 pb-2'>
                       <p>Delivery</p>
                       <p>$ {delivery}</p>
                     </div>
@@ -233,10 +234,10 @@ const CartModal = ({
                       <p>Total</p>
                       <p>$ {total}</p>
                     </div>
-                    <div className='mt-6'>
+                    <div className='pt-14'>
                       <button
                         type='button'
-                        className='flex items-center w-full justify-center rounded-md border border-transparent bg-orange-700 px-6 py-3 font-medium text-white'
+                        className='flex items-center w-full justify-center rounded-md border border-transparent bg-orange-700 py-3 font-medium text-white'
                       >
                         Go to checkout
                       </button>
