@@ -1,76 +1,17 @@
+import { fetchCart } from "../api/cartApi";
+import { useCartMutations } from "../hooks/useCartMutations";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
 import { IoMdClose } from "react-icons/io";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import CartItemsComponent from "./CartItemsComponent.jsx";
-
-const fetchCart = async (token) => {
-  const response = await fetch(`${import.meta.env.VITE_CART_ENDPOINT}`, {
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Accept": "application/json"
-    }
-  });
-  if ( !response.ok ) {
-    throw new Error(await response.text());
-  }
-  return response.json();
-};
-
-const patchCartItem = async ({
-  token,
-  id,
-  color,
-  size,
-  quantity
-}) => {
-  const response = await fetch(`${import.meta.env.VITE_CART_ENDPOINT}/products/${id}`, {
-    method: "PATCH",
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Accept": "application/json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      color,
-      size,
-      quantity
-    })
-  });
-  if ( !response.ok ) {
-    throw new Error(await response.text());
-  }
-  return response.json();
-};
-
-const deleteCartItem = async ({
-  token,
-  id,
-  color,
-  size
-}) => {
-  const response = await fetch(
-    `${import.meta.env.VITE_CART_ENDPOINT}/products/${id}` +
-    `?color=${encodeURIComponent(color)}&size=${encodeURIComponent(size)}`,
-    {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Accept": "application/json"
-      }
-    });
-  if ( !response.ok ) {
-    throw new Error(await response.text());
-  }
-  return id;
-};
+import CartSumComponent from "./CartSumComponent.jsx";
 
 const CartModal = ({
   openModal,
   onClose
 }) => {
   const token = localStorage.getItem("token");
-  const queryClient = useQueryClient();
 
   const {
     data: cart = [],
@@ -82,34 +23,12 @@ const CartModal = ({
     enabled: !!token && openModal
   });
 
-  const patchMutation = useMutation({
-    mutationFn: patchCartItem,
-    onSuccess: () => queryClient.invalidateQueries(["cart", token])
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteCartItem,
-    onSuccess: () => queryClient.invalidateQueries(["cart", token])
-  });
-
-  const handleQuantityChange = (product, newQuantity) => {
-    patchMutation.mutate({
-      token,
-      id: product.id,
-      color: product.color,
-      size: product.size,
-      quantity: newQuantity
-    });
-  };
-
-  const handleRemove = (product) => {
-    deleteMutation.mutate({
-      token,
-      id: product.id,
-      color: product.color,
-      size: product.size
-    });
-  };
+  const {
+    patchMutation,
+    deleteMutation,
+    handleQuantityChange,
+    handleRemove
+  } = useCartMutations(token);
 
   const itemSum = cart.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -158,18 +77,7 @@ const CartModal = ({
                   </div>
 
                   <div className='border-gray-200'>
-                    <div className='flex justify-between text-base font-medium text-gray-500 pb-2'>
-                      <p>Items subtotal</p>
-                      <p>$ {subtotal}</p>
-                    </div>
-                    <div className='flex justify-between text-base font-medium text-gray-500 pb-2'>
-                      <p>Delivery</p>
-                      <p>$ {delivery}</p>
-                    </div>
-                    <div className='flex justify-between text-base font-medium '>
-                      <p>Total</p>
-                      <p>$ {total}</p>
-                    </div>
+                    <CartSumComponent cart={cart} />
                     <div className='pt-14'>
                       <button
                         type='button'

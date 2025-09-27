@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import CheckoutPageComponent from "../Components/CheckoutPageComponent.jsx";
 
 export const Route = createFileRoute('/checkout')({
   head: () => ({
@@ -12,5 +13,7 @@ export const Route = createFileRoute('/checkout')({
 })
 
 function RouteComponent() {
-  return <div>Hello "/cart"!</div>
+  return <div>
+    <CheckoutPageComponent />
+  </div>
 }
