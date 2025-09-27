@@ -1,16 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 
-const CartItemsComponent = ({isLoading,isError,cart,handleQuantityChange,handleRemove,deleteMutation,patchMutation}) => {
+const CartItemsComponent = ({ isLoading, isError, cart, handleQuantityChange, handleRemove, deleteMutation, patchMutation }) => {
   return (
-    <div>
+    <div className="max-h-[60vh] overflow-y-auto">
       <div className='flow-root pb-14'>
         {isLoading ? (
           <div className='py-6 text-center text-gray-500 text-2xl font-bold'>Loading...</div>
         ) : isError ? (
           <div className='py-6 text-center text-red-500 text-2xl font-bold'>Not Logged in</div>
         ) : (
-          <ul role='list' className='-my-6 '>
+          <ul role='list' className='-my-6'>
             {cart.length === 0 ? (
               <div className='py-6 flex flex-col text-center  items-center'>
                 <img src='/img_1.png' alt='Empty Cart' />

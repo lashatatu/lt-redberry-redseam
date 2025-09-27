@@ -27,7 +27,7 @@ const CheckoutPageComponent = () => {
   return (
     <div className='px-25'>
       <h1 className='font-semibold text-5xl py-10'>Checkout</h1>
-      <div className='grid grid-cols-6 gap-10 h-159'>
+      <div className='grid grid-cols-6 gap-10'>
         <div className='pl-2 bg-[#f8f6f7] col-span-4 rounded-2xl pt-15'>
           <div className='px-10 '>
             <h2 className='text-[22px] font-medium pb-12'>Order details</h2>
@@ -38,7 +38,7 @@ const CheckoutPageComponent = () => {
             </div>
           </div>
         </div>
-        <div className='flex h-full flex-col col-span-2 ml-20'>
+        <div className='flex flex-col col-span-2 ml-20 max-h-159'>
           <CartItemsComponent
             cart={cart}
             deleteMutation={deleteMutation}
@@ -48,6 +48,14 @@ const CheckoutPageComponent = () => {
             isLoading={isLoading}
             patchMutation={patchMutation} />
           <CartSumComponent cart={cart} />
+          <div className='pt-14'>
+            <button
+              type='button'
+              className='flex items-center w-full justify-center rounded-md border border-transparent bg-orange-700 py-3 font-medium text-white cursor-pointer'
+            >
+              Pay
+            </button>
+          </div>
         </div>
       </div>
     </div>

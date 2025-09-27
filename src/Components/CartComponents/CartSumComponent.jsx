@@ -5,7 +5,7 @@ const CartSumComponent = ({cart}) => {
   const delivery = cart.length === 0 ? 0 : 5;
   const total = delivery + subtotal;
   return (
-    <div>
+    <div className='pt-6'>
       <div className='flex justify-between text-base font-medium text-gray-500 pb-2'>
         <p>Items subtotal</p>
         <p>$ {subtotal}</p>

@@ -1,6 +1,17 @@
 import { HiOutlineMail } from "react-icons/hi";
+import { useUser } from "../../api/loginLogic.js";
+import React, { useState, useEffect } from "react";
 
 const CheckoutAddressDetailsComponent = () => {
+  const user = useUser();
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    if (user?.email) {
+      setEmail(user.email);
+    }
+  }, [user]);
+
   return (
     <div className='grid grid-cols-10 grid-rows-3 gap-8 text-black'>
       <div className='col-span-3'>
@@ -19,6 +30,8 @@ const CheckoutAddressDetailsComponent = () => {
         <input
           type='email'
           placeholder='Email'
+          value={email}
+          onChange={e => setEmail(e.target.value)}
           className='w-full bg-white border border-gray-300 rounded-lg pl-8 py-2 placeholder-gray-600' />
         <span className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700 pointer-events-none placeholder-gray-600'>
           <HiOutlineMail />
