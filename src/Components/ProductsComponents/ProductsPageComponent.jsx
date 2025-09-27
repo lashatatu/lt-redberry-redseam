@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import PriceFilterComponent from "./PriceFilterComponent.jsx";
+import ProductsPriceFilterComponent from "./ProductsPriceFilterComponent.jsx";
 import ProductsSortByComponent from "./ProductsSortByComponent.jsx";
 import ProductsPaginationComponent from "./ProductsPaginationComponent.jsx";
 import ProductsItemCardComponent from "./ProductsItemCardComponent.jsx";
@@ -32,7 +32,7 @@ const ProductsPageComponent = ({ products, sort, price_from, price_to, onSort })
       <div className='flex justify-between py-12'>
         <h1 className='text-4xl font-bold'>Products</h1>
         <div className='flex items-center space-x-4'>
-          <PriceFilterComponent filterRef={filterRef} showFilter={showFilter} onToggle={handleToggleFilter} onSort={onSort} sort={sort} price_from={price_from} price_to={price_to} />
+          <ProductsPriceFilterComponent filterRef={filterRef} showFilter={showFilter} onToggle={handleToggleFilter} onSort={onSort} sort={sort} price_from={price_from} price_to={price_to} />
           <ProductsSortByComponent sortByRef={sortByRef} showSortBy={showSortBy} onToggle={handleToggleSortBy} onSort={onSort} sort={sort} price_from={price_from} price_to={price_to} />
         </div>
       </div>

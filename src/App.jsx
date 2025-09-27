@@ -1,4 +1,4 @@
-import HeroComponent from "./Components/HeroComponent.jsx";
+import HeroComponent from "./Components/HeroComponents/HeroComponent.jsx";
 import  { useState } from "react";
 
 function App() {

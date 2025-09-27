@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { HiShoppingCart, HiMiniUser } from "react-icons/hi2";
-import CartModal from "./CartModal.jsx";
+import CartModal from "../CartComponents/CartModal.jsx";
 
 const HeaderComponent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

@@ -1,5 +1,5 @@
-import { fetchCart } from "../api/cartApi";
-import { useCartMutations } from "../hooks/useCartMutations";
+import { fetchCart } from "../../api/cartApi.js";
+import { useCartMutations } from "../../hooks/useCartMutations.js";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
 import { IoMdClose } from "react-icons/io";
 import { useQuery } from "@tanstack/react-query";

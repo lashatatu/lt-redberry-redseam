@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 
-const PriceFilterComponent = ({filterRef,showFilter,onToggle,onSort,sort,price_from,price_to}) => {
+const ProductsPriceFilterComponent = ({filterRef,showFilter,onToggle,onSort,sort,price_from,price_to}) => {
   const [priceFrom, setPriceFrom] = useState(price_from || "");
   const [priceTo, setPriceTo] = useState(price_to || "");
   return (
@@ -45,4 +45,4 @@ const PriceFilterComponent = ({filterRef,showFilter,onToggle,onSort,sort,price_f
   );
 };
 
-export default PriceFilterComponent;
+export default ProductsPriceFilterComponent;

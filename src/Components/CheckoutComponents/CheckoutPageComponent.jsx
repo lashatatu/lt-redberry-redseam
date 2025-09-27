@@ -1,8 +1,8 @@
-import CartItemsComponent from "./CartItemsComponent.jsx";
+import CartItemsComponent from "../CartComponents/CartItemsComponent.jsx";
 import { useQuery } from "@tanstack/react-query";
-import { fetchCart } from "../api/cartApi.js";
-import { useCartMutations } from "../hooks/useCartMutations.js";
-import CartSumComponent from "./CartSumComponent.jsx";
+import { fetchCart } from "../../api/cartApi.js";
+import { useCartMutations } from "../../hooks/useCartMutations.js";
+import CartSumComponent from "../CartComponents/CartSumComponent.jsx";
 import CheckoutAddressDetailsComponent from "./CheckoutAddressDetailsComponent.jsx";
 
 const CheckoutPageComponent = () => {

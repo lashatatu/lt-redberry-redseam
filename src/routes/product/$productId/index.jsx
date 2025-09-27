@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import ProductDetails from "../../../Components/ProductDetails.jsx";
-import CartModal from "../../../Components/CartModal.jsx";
+import CartModal from "../../../Components/CartComponents/CartModal.jsx";
 
 const fetchProduct = async (productId) => {
   const res = await fetch(`${import.meta.env.VITE_PRODUCT_ID_ENDPOINT}/${productId}`, {

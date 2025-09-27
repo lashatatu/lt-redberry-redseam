@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import CheckoutPageComponent from "../Components/CheckoutPageComponent.jsx";
+import CheckoutPageComponent from "../Components/CheckoutComponents/CheckoutPageComponent.jsx";
 
 export const Route = createFileRoute('/checkout')({
   head: () => ({

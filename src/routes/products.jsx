@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import ProductsPageComponent from "../Components/ProductsPageComponent.jsx";
+import ProductsPageComponent from "../Components/ProductsComponents/ProductsPageComponent.jsx";
 
 const fetchProducts = async (page = 1, sort, price_from, price_to) => {
   const url = new URL(import.meta.env.VITE_PRODUCT_ID_ENDPOINT);
