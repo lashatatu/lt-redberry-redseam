@@ -25,12 +25,12 @@ const CheckoutPageComponent = () => {
   } = useCartMutations(token);
 
   return (
-    <div className='px-28'>
+    <div className='px-25'>
       <h1 className='font-semibold text-5xl py-10'>Checkout</h1>
-      <div className='grid grid-cols-5 gap-4 h-full '>
-        <div className='pl-2 bg-gray-200 col-span-3 rounded-2xl pt-15'>
-          <div className='px-10'>
-            <h2 className='text-[22px] font-medium pb-10'>Order details</h2>
+      <div className='grid grid-cols-6 gap-10 h-159'>
+        <div className='pl-2 bg-[#f8f6f7] col-span-4 rounded-2xl pt-15'>
+          <div className='px-10 '>
+            <h2 className='text-[22px] font-medium pb-12'>Order details</h2>
             {/*shipping element*/}
             <CheckoutAddressDetailsComponent />
             <div className='col-span-4'>
@@ -38,7 +38,7 @@ const CheckoutPageComponent = () => {
             </div>
           </div>
         </div>
-        <div className='flex h-full flex-col col-span-2'>
+        <div className='flex h-full flex-col col-span-2 ml-20'>
           <CartItemsComponent
             cart={cart}
             deleteMutation={deleteMutation}

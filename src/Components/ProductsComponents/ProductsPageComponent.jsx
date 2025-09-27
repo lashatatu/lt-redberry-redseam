@@ -28,7 +28,7 @@ const ProductsPageComponent = ({ products, sort, price_from, price_to, onSort })
     });
   };
   return (
-    <div className='px-28'>
+    <div className='px-25'>
       <div className='flex justify-between py-12'>
         <h1 className='text-4xl font-bold'>Products</h1>
         <div className='flex items-center space-x-4'>

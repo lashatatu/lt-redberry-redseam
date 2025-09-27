@@ -78,7 +78,7 @@ const ProductDetails = ({ product }) => {
   }, [product]);
 
   return (
-    <div className='px-28'>
+    <div className='px-25'>
       <p className='pb-12 pt-6'>Listing / Products</p>
 
       {/*first column grid for images*/}

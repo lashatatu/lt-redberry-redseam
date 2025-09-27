@@ -31,9 +31,6 @@ const CartModal = ({
   } = useCartMutations(token);
 
   const itemSum = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const delivery = cart.length === 0 ? 0 : 5;
-  const total = delivery + subtotal;
 
   return (
     <div>
@@ -52,7 +49,7 @@ const CartModal = ({
               >
                 <div className='flex h-full flex-col bg-white shadow-xl p-10'>
                   <div className='flex-1'>
-                    <div className='flex items-start justify-between'>
+                    <div className='flex items-start justify-between pb-14'>
                       <DialogTitle className='text-lg font-medium text-gray-900'>Shopping cart ({itemSum})</DialogTitle>
                       <div className='ml-3 flex h-7 items-center'>
                         <button

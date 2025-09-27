@@ -1,30 +1,13 @@
 import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
 import RegisterImageUploadComponent from "./RegisterImageUploadComponent.jsx";
-
-const registerUser = async (formData) => {
-  const data = new FormData();
-  data.append('username', formData.username);
-  data.append('email', formData.email);
-  data.append('password', formData.password);
-  data.append('password_confirmation', formData.password_confirmation);
-  if (formData.avatar) {
-    data.append('avatar', formData.avatar);
-  }
-  const response = await fetch(import.meta.env.VITE_REGISTER_ENDPOINT, {
-    method: 'POST',
-    body: data,
-    headers: {
-      'Accept': 'application/json',
-    },
-  });
-  if (!response.ok) {
-    const res = await response.json();
-    throw new Error(res.message || 'Registration failed.');
-  }
-  return response.json();
-};
+import {
+  registerUser,
+  handleAvatarChange,
+  handleInputChange,
+  handleRegisterSubmit,
+  useRegisterMutation
+} from '../../api/registerLogic';
 
 const RegisterComponent = ({ onLoginClick }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,66 +19,28 @@ const RegisterComponent = ({ onLoginClick }) => {
     avatar: null,
   });
 
-  const handleAvatarChange = (file) => {
-    setFormData((prev) => ({ ...prev, avatar: file }));
-  };
+  // Use the custom mutation hook
+  const registerMutation = useRegisterMutation(setFormData);
 
-  const mutation = useMutation({
-    mutationFn: registerUser,
-    onSuccess: (data) => {
-      setFormData({
-        username: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-        avatar: null,
-      });
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('userAvatar', data.user.avatar || '');
-    },
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value, type, files } = e.target;
-    if (type === 'file') {
-      setFormData({
-        ...formData,
-        [name]: files[0],
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    }
-    if (mutation.isError || mutation.isSuccess) mutation.reset();
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formData.password !== formData.password_confirmation) {
-      mutation.reset();
-      mutation.mutate({ ...formData, error: 'Passwords do not match.' });
-      return;
-    }
-    mutation.mutate(formData);
-  };
+  // Handlers from logic file
+  const avatarChangeHandler = handleAvatarChange(setFormData);
+  const inputChangeHandler = handleInputChange(formData, setFormData, registerMutation.reset);
+  const submitHandler = handleRegisterSubmit(formData, registerMutation);
 
   return (
     <div className='w-3/5 flex'>
       <div className='flex-1 flex items-center justify-center'>
         <div className='w-full h-1/2 max-w-3/5 mb-12'>
           <h1 className='text-5xl font-bold text-gray-900 mb-12'>Register</h1>
-          <form onSubmit={handleSubmit} className='space-y-6' encType='multipart/form-data'>
-            <RegisterImageUploadComponent onImageChange={handleAvatarChange}/>
+          <form onSubmit={submitHandler} className='space-y-6' encType='multipart/form-data'>
+            <RegisterImageUploadComponent onImageChange={avatarChangeHandler}/>
             <div>
               <input
                 type='text'
                 id='username'
                 name='username'
                 value={formData.username}
-                onChange={handleInputChange}
+                onChange={inputChangeHandler}
                 className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent'
                 required
                 placeholder='Username *'
@@ -107,7 +52,7 @@ const RegisterComponent = ({ onLoginClick }) => {
                 id='email'
                 name='email'
                 value={formData.email}
-                onChange={handleInputChange}
+                onChange={inputChangeHandler}
                 className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent'
                 required
                 placeholder='Email *'
@@ -120,14 +65,14 @@ const RegisterComponent = ({ onLoginClick }) => {
                   id='password'
                   name='password'
                   value={formData.password}
-                  onChange={handleInputChange}
+                  onChange={inputChangeHandler}
                   className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent pr-12'
                   required
                   placeholder='Password *'
                 />
                 <button
                   type='button'
-                  onClick={() => setShowPassword( !showPassword)}
+                  onClick={() => setShowPassword(!showPassword)}
                   className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600'
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -141,7 +86,7 @@ const RegisterComponent = ({ onLoginClick }) => {
                   id='password_confirmation'
                   name='password_confirmation'
                   value={formData.password_confirmation}
-                  onChange={handleInputChange}
+                  onChange={inputChangeHandler}
                   className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent pr-12'
                   required
                   placeholder='Confirm Password *'
@@ -155,12 +100,12 @@ const RegisterComponent = ({ onLoginClick }) => {
                 </button>
               </div>
             </div>
-            {mutation.isError && (
+            {registerMutation.isError && (
               <div className='text-red-500 text-center'>
-                {mutation.error?.message || mutation.error?.error || 'Network error.'}
+                {registerMutation.error?.message || registerMutation.error?.error || 'Network error.'}
               </div>
             )}
-            {mutation.isSuccess && !mutation.isError && (
+            {registerMutation.isSuccess && !registerMutation.isError && (
               <div className='text-green-600 text-center'>Registration successful!</div>
             )}
             <button

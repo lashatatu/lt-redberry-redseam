@@ -3,8 +3,8 @@ import { FaMinus, FaPlus } from "react-icons/fa6";
 
 const CartItemsComponent = ({isLoading,isError,cart,handleQuantityChange,handleRemove,deleteMutation,patchMutation}) => {
   return (
-    <div className='pt-14'>
-      <div className='flow-root'>
+    <div>
+      <div className='flow-root pb-14'>
         {isLoading ? (
           <div className='py-6 text-center text-gray-500 text-2xl font-bold'>Loading...</div>
         ) : isError ? (
@@ -25,7 +25,7 @@ const CartItemsComponent = ({isLoading,isError,cart,handleQuantityChange,handleR
             ) : (
               cart.map((product) => (
                 <li key={product.id + product.color + product.size} className='flex py-6'>
-                  <div className='size-34 shrink-0 overflow-hidden rounded-md border border-gray-200'>
+                  <div className='h-33 w-25 shrink-0 overflow-hidden rounded-md border border-gray-200'>
                     <img
                       alt={product.name}
                       src={
@@ -33,7 +33,7 @@ const CartItemsComponent = ({isLoading,isError,cart,handleQuantityChange,handleR
                           product.available_colors.findIndex(c => c === product.color)
                           ] || product.images[0]
                       }
-                      className='size-full object-cover' />
+                      className='size-fit object-cover' />
                   </div>
 
                   <div className='ml-4 flex flex-1 flex-col'>

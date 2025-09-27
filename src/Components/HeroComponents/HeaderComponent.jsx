@@ -21,7 +21,7 @@ const HeaderComponent = () => {
 
   return (
     <div className='relative'>
-      <header className='flex justify-between items-center px-28 py-6'>
+      <header className='flex justify-between items-center px-25 pt-5 pb-20'>
         <div className='flex items-center space-x-2'>
           <div className='rounded flex items-center justify-center'>
             <Link to={"/products"}>
@@ -45,7 +45,7 @@ const HeaderComponent = () => {
                   <img
                     src={avatar}
                     alt='User avatar'
-                    className='w-8 h-8 rounded-full object-cover border border-gray-300'
+                    className='w-10 h-10 rounded-full object-cover border border-gray-300'
                   />
                 ) : (
                   <div className='w-8 h-8 rounded-full flex items-center justify-center border border-gray-300'>
