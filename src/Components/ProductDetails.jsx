@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { HiOutlineShoppingCart } from "react-icons/hi2";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-const ProductDetails = ({ product }) => {
+const ProductDetails = ({ product, onOpenModal }) => {
   const uniqueColors = {
     "Yellow": "bg-yellow-500",
     "Green": "bg-green-500",
@@ -60,7 +60,11 @@ const ProductDetails = ({ product }) => {
   });
 
   const handleAddToCart = (item) => {
-    mutation.mutate(item);
+    mutation.mutate(item, {
+      onSuccess: () => {
+        onOpenModal();
+      }
+    });
   };
 
   useEffect(() => {

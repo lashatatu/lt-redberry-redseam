@@ -37,7 +37,11 @@ function ProductId () {
   const [openModal, setOpenModal] = useState(false);
 
   return <div>
-    <ProductDetails product={product} />
+    <ProductDetails
+      product={product}
+      onOpenModal={() => setOpenModal(true)}
+      onClose={setOpenModal}
+    />
     <CartModal openModal={openModal} onClose={setOpenModal} />
   </div>;
 }

@@ -19,10 +19,8 @@ const RegisterComponent = ({ onLoginClick }) => {
     avatar: null,
   });
 
-  // Use the custom mutation hook
   const registerMutation = useRegisterMutation(setFormData);
 
-  // Handlers from logic file
   const avatarChangeHandler = handleAvatarChange(setFormData);
   const inputChangeHandler = handleInputChange(formData, setFormData, registerMutation.reset);
   const submitHandler = handleRegisterSubmit(formData, registerMutation);

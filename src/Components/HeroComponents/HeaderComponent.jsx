@@ -46,7 +46,7 @@ const HeaderComponent = () => {
                 <div onClick={() => setOpen(true)}>
                   <HiShoppingCart size={24} fill='black' />
                 </div>
-                {open && <CartModal openModal={open} onClose={setOpen} />}
+                <CartModal openModal={open} onClose={setOpen} />
                 {avatar ? (
                   <Link to={"/"}>
                     <img

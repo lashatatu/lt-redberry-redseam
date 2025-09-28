@@ -21,11 +21,11 @@ const LogInComponent = ({ onRegisterClick }) => {
   const onSuccess = (data) => {
     setSuccess(true);
     setError(null);
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('userAvatar', data.user.avatar || '');
-    localStorage.setItem('user', JSON.stringify(data.user));
-    window.dispatchEvent(new Event('local-storage'));
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("userAvatar", data.user.avatar || "");
+    localStorage.setItem("user", JSON.stringify(data.user));
+    window.dispatchEvent(new Event("local-storage"));
   };
 
   const onError = (err) => {
@@ -33,7 +33,10 @@ const LogInComponent = ({ onRegisterClick }) => {
     setSuccess(false);
   };
 
-  const { mutate } = useLoginMutation({ onSuccess, onError });
+  const { mutate } = useLoginMutation({
+    onSuccess,
+    onError
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,7 +59,7 @@ const LogInComponent = ({ onRegisterClick }) => {
                 name='email'
                 value={formData.email}
                 onChange={handleInputChange}
-                className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent'
+                className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent'
                 required
                 placeholder='Email or username *'
               />
@@ -69,13 +72,13 @@ const LogInComponent = ({ onRegisterClick }) => {
                   name='password'
                   value={formData.password}
                   onChange={handleInputChange}
-                  className='w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent pr-12'
+                  className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent pr-12 ${error ? "border-red-500 focus:ring-red-500" : "border-gray-200"}`}
                   required
                   placeholder='Password *'
                 />
                 <button
                   type='button'
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => setShowPassword( !showPassword)}
                   className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600'
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}

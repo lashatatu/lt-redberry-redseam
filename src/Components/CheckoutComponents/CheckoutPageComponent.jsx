@@ -1,15 +1,16 @@
 import { useState } from "react";
-import CartItemsComponent from "../CartComponents/CartItemsComponent.jsx";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { fetchCart } from "../../api/cartApi.js";
 import { useCartMutations } from "../../hooks/useCartMutations.js";
+import CartItemsComponent from "../CartComponents/CartItemsComponent.jsx";
 import CartSumComponent from "../CartComponents/CartSumComponent.jsx";
 import CheckoutAddressDetailsComponent from "./CheckoutAddressDetailsComponent.jsx";
 import CheckoutSuccessModal from "./CheckoutSuccessModal.jsx";
-import { useNavigate } from "@tanstack/react-router";
 
 const CheckoutPageComponent = () => {
   const token = localStorage.getItem("token");
+  const queryClient = useQueryClient();
 
   const [addressData, setAddressData] = useState({
     name: "",
@@ -59,6 +60,7 @@ const CheckoutPageComponent = () => {
     onSuccess: () => {
       setErrors({});
       setSuccessOpen(true);
+      queryClient.invalidateQueries({ queryKey: ["cart", token] });
     }
   });
 
@@ -110,7 +112,7 @@ const CheckoutPageComponent = () => {
               Pay
             </button>
             {checkoutMutation.isError && (
-              <div className="text-red-600 mt-2">
+              <div className='text-red-600 mt-2'>
                 {checkoutMutation.error?.message}
               </div>
             )}
