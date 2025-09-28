@@ -76,14 +76,16 @@ const CartModal = ({
                   <div className='border-gray-200'>
                     <CartSumComponent cart={cart} />
                     <div className='pt-14'>
-                      <button
-                        type='button'
-                        className='flex items-center w-full justify-center rounded-md border border-transparent bg-orange-700 py-3 font-medium text-white'
-                      >
-                        <Link to={"/checkout"}>
+                      <Link to={"/checkout"}>
+                        <button
+                          type='button'
+                          onClick={() => onClose(false)}
+                          className='flex cursor-pointer items-center w-full justify-center rounded-md border border-transparent bg-orange-700 py-3 font-medium text-white'
+                        >
                           Go to checkout
-                        </Link>
-                      </button>
+                        </button>
+                      </Link>
+
                     </div>
                   </div>
                 </div>

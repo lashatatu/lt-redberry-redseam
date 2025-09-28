@@ -6,7 +6,7 @@ import CartModal from "../CartComponents/CartModal.jsx";
 const HeaderComponent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [avatar, setAvatar] = useState("");
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
@@ -42,21 +42,25 @@ const HeaderComponent = () => {
                 </div>
                 {open && <CartModal openModal={open} onClose={setOpen} />}
                 {avatar ? (
-                  <img
-                    src={avatar}
-                    alt='User avatar'
-                    className='w-10 h-10 rounded-full object-cover border border-gray-300'
-                  />
+                  <Link to={"/"}>
+                    <img
+                      src={avatar}
+                      alt='User avatar'
+                      className='w-10 h-10 rounded-full object-cover border border-gray-300'
+                    />
+                  </Link>
                 ) : (
                   <div className='w-10 h-10 rounded-full flex items-center justify-center border border-gray-300'>
-                    <HiMiniUser size={20} fill='black' />
+                    <Link to={"/"}>
+                      <HiMiniUser size={20} fill='black' />
+                    </Link>
                   </div>
                 )}
               </div>
             ) : (
-              <Link to={'/'} className='flex items-center space-x-2'>
-                  <HiMiniUser size={20} fill='black' />
-                  <span>Log in</span>
+              <Link to={"/"} className='flex items-center space-x-2'>
+                <HiMiniUser size={20} fill='black' />
+                <span>Log in</span>
               </Link>
             )}
           </span>

@@ -3,7 +3,7 @@ import { FaMinus, FaPlus } from "react-icons/fa6";
 
 const CartItemsComponent = ({ isLoading, isError, cart, handleQuantityChange, handleRemove, deleteMutation, patchMutation }) => {
   return (
-    <div className="max-h-[60vh] overflow-y-auto">
+    <div className="h-[60vh] overflow-y-auto">
       <div className='flow-root pb-14'>
         {isLoading ? (
           <div className='py-6 text-center text-gray-500 text-2xl font-bold'>Loading...</div>

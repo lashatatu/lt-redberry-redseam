@@ -1,12 +1,27 @@
+import { useState } from "react";
 import CartItemsComponent from "../CartComponents/CartItemsComponent.jsx";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { fetchCart } from "../../api/cartApi.js";
 import { useCartMutations } from "../../hooks/useCartMutations.js";
 import CartSumComponent from "../CartComponents/CartSumComponent.jsx";
 import CheckoutAddressDetailsComponent from "./CheckoutAddressDetailsComponent.jsx";
+import CheckoutSuccessModal from "./CheckoutSuccessModal.jsx";
+import { useNavigate } from "@tanstack/react-router";
 
 const CheckoutPageComponent = () => {
   const token = localStorage.getItem("token");
+
+  const [addressData, setAddressData] = useState({
+    name: "",
+    surname: "",
+    email: "",
+    address: "",
+    zip_code: ""
+  });
+
+  const [errors, setErrors] = useState({});
+  const [successOpen, setSuccessOpen] = useState(false);
+  const navigate = useNavigate();
 
   const {
     data: cart = [],
@@ -24,6 +39,38 @@ const CheckoutPageComponent = () => {
     handleRemove
   } = useCartMutations(token);
 
+  const checkoutMutation = useMutation({
+    mutationFn: async (data) => {
+      const res = await fetch(`${import.meta.env.VITE_CART_ENDPOINT}/checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+      });
+      if ( !res.ok ) {
+        const errorData = await res.json();
+        throw errorData;
+      }
+      return res.json();
+    },
+    onError: (error) => setErrors(error.errors || {}),
+    onSuccess: () => {
+      setErrors({});
+      setSuccessOpen(true);
+    }
+  });
+
+  const handlePay = () => {
+    checkoutMutation.mutate(addressData);
+  };
+
+  const handleContinue = () => {
+    setSuccessOpen(false);
+    navigate({ to: "/products" });
+  };
+
   return (
     <div className='px-25'>
       <h1 className='font-semibold text-5xl py-10'>Checkout</h1>
@@ -32,7 +79,11 @@ const CheckoutPageComponent = () => {
           <div className='px-10 '>
             <h2 className='text-[22px] font-medium pb-12'>Order details</h2>
             {/*shipping element*/}
-            <CheckoutAddressDetailsComponent />
+            <CheckoutAddressDetailsComponent
+              addressData={addressData}
+              setAddressData={setAddressData}
+              errors={errors}
+            />
             <div className='col-span-4'>
               {/*empty*/}
             </div>
@@ -46,18 +97,31 @@ const CheckoutPageComponent = () => {
             handleRemove={handleRemove}
             isError={isError}
             isLoading={isLoading}
-            patchMutation={patchMutation} />
+            patchMutation={patchMutation}
+          />
           <CartSumComponent cart={cart} />
           <div className='pt-14'>
             <button
               type='button'
               className='flex items-center w-full justify-center rounded-md border border-transparent bg-orange-700 py-3 font-medium text-white cursor-pointer'
+              onClick={handlePay}
+              disabled={checkoutMutation.isLoading}
             >
               Pay
             </button>
+            {checkoutMutation.isError && (
+              <div className="text-red-600 mt-2">
+                {checkoutMutation.error?.message}
+              </div>
+            )}
           </div>
         </div>
       </div>
+      <CheckoutSuccessModal
+        open={successOpen}
+        onClose={() => setSuccessOpen(false)}
+        onContinue={handleContinue}
+      />
     </div>
   );
 };
