@@ -24,6 +24,8 @@ const LogInComponent = ({ onRegisterClick }) => {
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('token', data.token);
     localStorage.setItem('userAvatar', data.user.avatar || '');
+    localStorage.setItem('user', JSON.stringify(data.user));
+    window.dispatchEvent(new Event('local-storage'));
   };
 
   const onError = (err) => {

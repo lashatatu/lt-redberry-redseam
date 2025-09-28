@@ -10,13 +10,19 @@ const HeaderComponent = () => {
 
   useEffect(() => {
     setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
-    setAvatar(localStorage.getItem("userAvatar") || "");
+    const user = localStorage.getItem("user");
+    setAvatar(user ? JSON.parse(user).avatar || "" : "");
     const handleStorage = () => {
       setIsLoggedIn(localStorage.getItem("isLoggedIn") === "true");
-      setAvatar(localStorage.getItem("userAvatar") || "");
+      const user = localStorage.getItem("user");
+      setAvatar(user ? JSON.parse(user).avatar || "" : "");
     };
     window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
+    window.addEventListener("local-storage", handleStorage);
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("local-storage", handleStorage);
+    };
   }, []);
 
   return (
