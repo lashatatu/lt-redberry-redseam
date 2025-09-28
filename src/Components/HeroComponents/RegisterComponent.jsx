@@ -2,7 +2,6 @@ import { Eye, EyeOff } from 'lucide-react';
 import React, { useState } from 'react';
 import RegisterImageUploadComponent from "./RegisterImageUploadComponent.jsx";
 import {
-  registerUser,
   handleAvatarChange,
   handleInputChange,
   handleRegisterSubmit,

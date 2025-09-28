@@ -37,35 +37,19 @@ const CheckoutPageComponent = () => {
     patchMutation,
     deleteMutation,
     handleQuantityChange,
-    handleRemove
+    handleRemove,
+    checkoutMutation
   } = useCartMutations(token);
 
-  const checkoutMutation = useMutation({
-    mutationFn: async (data) => {
-      const res = await fetch(`${import.meta.env.VITE_CART_ENDPOINT}/checkout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(data)
-      });
-      if ( !res.ok ) {
-        const errorData = await res.json();
-        throw errorData;
-      }
-      return res.json();
-    },
-    onError: (error) => setErrors(error.errors || {}),
-    onSuccess: () => {
-      setErrors({});
-      setSuccessOpen(true);
-      queryClient.invalidateQueries({ queryKey: ["cart", token] });
-    }
-  });
-
   const handlePay = () => {
-    checkoutMutation.mutate(addressData);
+    checkoutMutation.mutate({
+      data: addressData,
+      onCheckoutError: (error) => setErrors(error.errors || {}),
+      onCheckoutSuccess: () => {
+        setErrors({});
+        setSuccessOpen(true);
+      }
+    });
   };
 
   const handleContinue = () => {

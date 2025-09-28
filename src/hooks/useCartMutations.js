@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { patchCartItem, deleteCartItem } from "../api/cartApi";
+import { patchCartItem, deleteCartItem, checkoutCart } from "../api/cartApi";
 
 export const useCartMutations = (token) => {
   const queryClient = useQueryClient();
@@ -12,6 +12,21 @@ export const useCartMutations = (token) => {
   const deleteMutation = useMutation({
     mutationFn: deleteCartItem,
     onSuccess: () => queryClient.invalidateQueries(["cart", token])
+  });
+
+  const checkoutMutation = useMutation({
+    mutationFn: ({ data }) => checkoutCart({ token, data }),
+    onError: (error, variables) => {
+      if (variables && typeof variables.onCheckoutError === 'function') {
+        variables.onCheckoutError(error);
+      }
+    },
+    onSuccess: (data, variables) => {
+      if (variables && typeof variables.onCheckoutSuccess === 'function') {
+        variables.onCheckoutSuccess(data);
+      }
+      queryClient.invalidateQueries(["cart", token]);
+    }
   });
 
   const handleQuantityChange = (product, newQuantity) => {
@@ -33,5 +48,5 @@ export const useCartMutations = (token) => {
     });
   };
 
-  return { patchMutation, deleteMutation, handleQuantityChange, handleRemove };
+  return { patchMutation, deleteMutation, handleQuantityChange, handleRemove, checkoutMutation };
 };

@@ -43,3 +43,19 @@ export const deleteCartItem = async ({ token, id, color, size }) => {
   }
   return id;
 };
+
+export const checkoutCart = async ({ token, data }) => {
+  const res = await fetch(`${import.meta.env.VITE_CART_ENDPOINT}/checkout`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw errorData;
+  }
+  return res.json();
+};
